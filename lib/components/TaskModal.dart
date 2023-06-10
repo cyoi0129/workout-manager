@@ -38,10 +38,6 @@ class TaskModal extends StatelessWidget {
             )
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Center(child: Text('トレーニング編集'))],
-        )
       ]),
       content: Container(
         height: 360.0,
@@ -72,19 +68,24 @@ class TaskModal extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [Text('ウェイト')])),
+                    children: [
+                      Text('ウェイト: '),
+                      Text('${(_currentData.getEditingTask().weight).toInt()}')
+                    ])),
             _masterData.hasWeight(_currentData.getEditingTask().master)
                 ? Row(
                     children: [
-                      Slider(
-                        key: null,
-                        min: 0.0,
-                        max: 200.0,
-                        onChanged: _currentData.changeWeight,
-                        value:
-                            (_currentData.getEditingTask().weight).toDouble(),
+                      Container(
+                        width: 260.0,
+                        child: Slider(
+                          key: null,
+                          min: 0.0,
+                          max: 200.0,
+                          onChanged: _currentData.changeWeight,
+                          value:
+                              (_currentData.getEditingTask().weight).toDouble(),
+                        ),
                       ),
-                      Text('${(_currentData.getEditingTask().weight).toInt()}')
                     ],
                   )
                 : Padding(
@@ -98,34 +99,44 @@ class TaskModal extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [Text('セット数')])),
+                    children: [
+                      Text('セット数: '),
+                      Text('${(_currentData.getEditingTask().sets).toInt()}')
+                    ])),
             Row(
               children: [
-                Slider(
-                  key: null,
-                  min: 0.0,
-                  max: 5.0,
-                  onChanged: _currentData.changeSets,
-                  value: _currentData.getEditingTask().sets.toDouble(),
+                Container(
+                  width: 260.0,
+                  child: Slider(
+                    key: null,
+                    min: 0.0,
+                    max: 5.0,
+                    onChanged: _currentData.changeSets,
+                    value: _currentData.getEditingTask().sets.toDouble(),
+                  ),
                 ),
-                Text('${(_currentData.getEditingTask().sets).toInt()}')
               ],
             ),
             Padding(
                 padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [Text('回数')])),
+                    children: [
+                      Text('回数: '),
+                      Text('${(_currentData.getEditingTask().rep).toInt()}')
+                    ])),
             Row(
               children: [
-                Slider(
-                  key: null,
-                  min: 0.0,
-                  max: 20.0,
-                  onChanged: _currentData.changeRep,
-                  value: _currentData.getEditingTask().rep.toDouble(),
+                Container(
+                  width: 260.0,
+                  child: Slider(
+                    key: null,
+                    min: 0.0,
+                    max: 20.0,
+                    onChanged: _currentData.changeRep,
+                    value: _currentData.getEditingTask().rep.toDouble(),
+                  ),
                 ),
-                Text('${(_currentData.getEditingTask().rep).toInt()}')
               ],
             ),
           ],

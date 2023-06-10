@@ -35,10 +35,6 @@ class MasterModal extends StatelessWidget {
             )
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Center(child: Text('メニュー編集'))],
-        )
       ]),
       content: Container(
         height: 300.0,

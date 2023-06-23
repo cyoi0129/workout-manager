@@ -38,7 +38,12 @@ class CalendarModel extends ChangeNotifier {
     }
   }
 
+  void _initData() {
+    _events = {};
+  }
+
   void _setEventData() {
+    _initData();
     if (_taskList.length > 0) {
       for (TaskModel task in _taskList) {
         _addEvents(task);

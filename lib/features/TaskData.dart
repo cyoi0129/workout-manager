@@ -143,7 +143,12 @@ class TaskEditModel extends ChangeNotifier {
     _weight = data.weight;
     _sets = data.sets;
     _rep = data.rep;
+    weightEditTextEditingController =
+        TextEditingController(text: data.weight.toString());
   }
+
+  TextEditingController weightEditTextEditingController =
+      TextEditingController();
 
   void changeMaster(int? value) {
     if (value != null) {
@@ -152,7 +157,7 @@ class TaskEditModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeWeight(double value) {
+  void changeWeight(int value) {
     _weight = value.toInt();
     notifyListeners();
   }
@@ -165,5 +170,11 @@ class TaskEditModel extends ChangeNotifier {
   void changeRep(double value) {
     _rep = value.toInt();
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    weightEditTextEditingController.dispose();
+    super.dispose();
   }
 }

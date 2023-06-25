@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../features/MasterData.dart';
 import '../features/TaskData.dart';
@@ -40,7 +41,7 @@ class TaskModal extends StatelessWidget {
         ),
       ]),
       content: Container(
-        height: 360.0,
+        height: 400.0,
         width: 360.0,
         child: Column(
           children: [
@@ -69,25 +70,19 @@ class TaskModal extends StatelessWidget {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('ウェイト: '),
+                      Text('ウェイト(kg): '),
                       Text('${(_currentData.getEditingTask().weight).toInt()}')
                     ])),
             _masterData.hasWeight(_currentData.getEditingTask().master)
-                ? Row(
-                    children: [
-                      Container(
-                        width: 260.0,
-                        child: Slider(
-                          key: null,
-                          min: 0.0,
-                          max: 200.0,
-                          onChanged: _currentData.changeWeight,
-                          value:
-                              (_currentData.getEditingTask().weight).toDouble(),
-                        ),
-                      ),
-                    ],
-                  )
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(24.0, 8.0, 64.0, 8.0),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      controller: _currentData.weightEditTextEditingController,
+                      onChanged: (value) =>
+                          _currentData.changeWeight(int.parse(value)),
+                    ))
                 : Padding(
                     padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                     child: Row(
@@ -165,9 +160,9 @@ class TaskModal extends StatelessWidget {
                       },
                       child: Text('キャンセル'),
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Colors.white70,
                         textStyle: const TextStyle(fontSize: 16),
-                        foregroundColor: Colors.black12,
+                        foregroundColor: Colors.black45,
                         fixedSize: Size(120, 40),
                         alignment: Alignment.center,
                       )))

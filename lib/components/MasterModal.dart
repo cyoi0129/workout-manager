@@ -159,9 +159,9 @@ class MasterModal extends StatelessWidget {
                       },
                       child: Text('キャンセル'),
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Colors.white70,
                         textStyle: const TextStyle(fontSize: 16),
-                        foregroundColor: Colors.black12,
+                        foregroundColor: Colors.black45,
                         fixedSize: Size(120, 40),
                         alignment: Alignment.center,
                       )))

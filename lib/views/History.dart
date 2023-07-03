@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../components/Footer.dart';
-import '../components/WorkoutTaskList.dart';
-import '../components/FoodTaskList.dart';
+import '../components/Calendar.dart';
+import '../components/Record.dart';
 
-class TaskView extends StatelessWidget {
-  const TaskView({super.key});
+class HistoryView extends StatelessWidget {
+  const HistoryView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +31,22 @@ class TaskView extends StatelessWidget {
           ],
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'トレーニング'),
-              Tab(text: '食事'),
+              Tab(text: '履歴'),
+              Tab(text: '自己ベスト'),
             ],
           ),
         ),
         body: const TabBarView(
           children: [
             Center(
-              child: WorkoutTaskList(),
+              child: Calendar(),
             ),
             Center(
-              child: FoodTaskList(),
+              child: Record(),
             ),
           ],
         ),
-        bottomNavigationBar: const Footer(current: 2),
+        bottomNavigationBar: const Footer(current: 1),
       ),
     );
   }

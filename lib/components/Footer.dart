@@ -6,7 +6,7 @@ class Footer extends StatefulWidget implements PreferredSizeWidget {
   @override
   State<Footer> createState() => _FooterState();
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _FooterState extends State<Footer> {
@@ -14,7 +14,13 @@ class _FooterState extends State<Footer> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    var tabs = ['/calendar', '/task', '/master', '/'];
+    var tabs = [
+      '/summary',
+      '/history',
+      '/task',
+      '/master',
+      '/account',
+    ];
     setState(() {
       _selectedIndex = index;
       Navigator.of(context)
@@ -24,29 +30,34 @@ class _FooterState extends State<Footer> {
 
   Widget build(BuildContext context) {
     setState(() {
-      _selectedIndex = widget.current;
+      if (widget.current < 5) {
+        _selectedIndex = widget.current;
+      }
     });
     return BottomNavigationBar(
-      items: [
+      selectedItemColor: Colors.teal,
+      unselectedItemColor: Colors.black45,
+      showUnselectedLabels: true,
+      items: const [
         BottomNavigationBarItem(
-          backgroundColor: Colors.lightBlue,
+          icon: Icon(Icons.bar_chart),
+          label: 'サマリー',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month),
-          label: 'カレンダー',
+          label: '履歴',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.lightBlue,
-          icon: Icon(Icons.history),
-          label: 'トレーニング',
+          icon: Icon(Icons.edit_note),
+          label: 'ノート',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.lightBlue,
-          icon: Icon(Icons.fitness_center),
-          label: 'メニュー',
+          icon: Icon(Icons.category),
+          label: 'マスター',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.lightBlue,
           icon: Icon(Icons.person),
-          label: 'アカウント',
+          label: 'ユーザー',
         ),
       ],
       currentIndex: _selectedIndex,

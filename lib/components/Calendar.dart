@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../components/Header.dart';
-import '../components/Footer.dart';
 import 'package:provider/provider.dart';
 import '../features/CalendarData.dart';
-import '../features/MasterData.dart';
-import '../features/TaskData.dart';
+import '../features/WorkoutMasterData.dart';
+import '../features/WorkoutTaskData.dart';
 
-class CalendarView extends StatelessWidget {
-  const CalendarView({super.key});
+class Calendar extends StatelessWidget {
+  const Calendar({super.key});
 
   @override
   Widget _buildEventsMarker(DateTime date, List events) {
@@ -26,7 +24,7 @@ class CalendarView extends StatelessWidget {
         child: Center(
           child: Text(
             '${events.length}',
-            style: TextStyle().copyWith(
+            style: const TextStyle().copyWith(
               color: Colors.white,
               fontSize: 12.0,
             ),
@@ -37,15 +35,14 @@ class CalendarView extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    final MasterData _masterData = context.watch<MasterData>();
-    final TaskData _taskData = context.watch<TaskData>();
+    final WorkoutMasterData _masterData = context.watch<WorkoutMasterData>();
+    final WorkoutTaskData _taskData = context.watch<WorkoutTaskData>();
     final CalendarModel _calendarData = context.watch<CalendarModel>();
     _taskData.setGetAllTask();
     _calendarData.setCalendarEvents(
         _masterData.getMasterList(), _taskData.getAllTaskList());
 
     return Scaffold(
-      appBar: const Header(title: 'カレンダー'),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
@@ -78,7 +75,7 @@ class CalendarView extends StatelessWidget {
                 })),
             Expanded(
                 child: Padding(
-              padding: EdgeInsets.fromLTRB(4.0, 24.0, 4.0, 24.0),
+              padding: const EdgeInsets.fromLTRB(4.0, 24.0, 4.0, 24.0),
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: _calendarData.getCurrentEvents().length,
@@ -93,7 +90,6 @@ class CalendarView extends StatelessWidget {
               ),
             )),
           ]),
-      bottomNavigationBar: const Footer(current: 0),
     );
   }
 }

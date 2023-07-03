@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'views/Account.dart';
-import 'views/Calendar.dart';
+import 'views/History.dart';
 import 'views/Master.dart';
+import 'views/Summary.dart';
 import 'views/Task.dart';
-import 'features/MasterData.dart';
-import 'features/TaskData.dart';
+import 'views/Account.dart';
+import 'features/WorkoutMasterData.dart';
+import 'features/WorkoutTaskData.dart';
+import 'features/FoodMasterData.dart';
+import 'features/FoodTaskData.dart';
 import 'features/InitData.dart';
 import 'features/CalendarData.dart';
+import 'features/AccountData.dart';
+import 'features/HistoryData.dart';
+import 'features/SummaryData.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -21,11 +27,20 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MasterData()),
-        ChangeNotifierProvider(create: (context) => MasterEditModel()),
-        ChangeNotifierProvider(create: (context) => TaskData()),
-        ChangeNotifierProvider(create: (context) => TaskEditModel()),
+        ChangeNotifierProvider(create: (context) => WorkoutMasterData()),
+        ChangeNotifierProvider(create: (context) => WorkoutMasterEditModel()),
+        ChangeNotifierProvider(create: (context) => WorkoutTaskData()),
+        ChangeNotifierProvider(create: (context) => WorkoutTaskEditModel()),
+        ChangeNotifierProvider(create: (context) => FoodMasterData()),
+        ChangeNotifierProvider(create: (context) => FoodMasterEditModel()),
+        ChangeNotifierProvider(create: (context) => FoodTaskData()),
+        ChangeNotifierProvider(create: (context) => FoodTaskEditModel()),
         ChangeNotifierProvider(create: (context) => CalendarModel()),
+        ChangeNotifierProvider(create: (context) => AccountData()),
+        ChangeNotifierProvider(create: (context) => AccountEditModel()),
+        ChangeNotifierProvider(create: (context) => HistoryData()),
+        ChangeNotifierProvider(create: (context) => HistoryEditModel()),
+        ChangeNotifierProvider(create: (context) => SummaryData()),
       ],
       child: const MyApp(),
     ),
@@ -42,14 +57,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'まっちょノート',
         theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
+          primarySwatch: Colors.teal,
           fontFamily: 'NotoSansJP',
         ),
         routes: {
           '/': (context) => const AccountView(),
-          '/calendar': (context) => const CalendarView(),
-          '/master': (context) => const MasterView(),
+          '/summary': (context) => const SummaryView(),
+          '/history': (context) => const HistoryView(),
           '/task': (context) => const TaskView(),
+          '/master': (context) => const MasterView(),
+          '/account': (context) => const AccountView(),
         });
   }
 }

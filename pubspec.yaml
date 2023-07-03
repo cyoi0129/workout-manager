@@ -42,6 +42,8 @@ dependencies:
   table_calendar: ^3.0.9
   flutter_native_splash: ^2.3.1
   flutter_launcher_icons: ^0.13.1
+  fl_chart: ^0.63.0
+  syncfusion_flutter_charts: ^22.1.36
 
 flutter_native_splash:
   color: '#65B2E2'
@@ -52,7 +54,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: 'assets/images/icon.png'
-  adaptive_icon_background: '#65B2E2'
+  adaptive_icon_background: '#009688'
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +82,8 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
+  assets:
+    - assets/images/header.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

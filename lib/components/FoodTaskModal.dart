@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../features/MasterData.dart';
-import '../features/TaskData.dart';
+import 'package:intl/intl.dart';
+import '../features/FoodMasterData.dart';
+import '../features/FoodTaskData.dart';
 
-class TaskModal extends StatelessWidget {
+class FoodTaskModal extends StatelessWidget {
   int target;
-  TaskModal({super.key, required this.target});
+  FoodTaskModal({super.key, required this.target});
 
   @override
   Widget build(BuildContext context) {
-    final TaskData _taskData = context.watch<TaskData>();
-    final MasterData _masterData = context.watch<MasterData>();
-    final TaskEditModel _currentData = context.watch<TaskEditModel>();
+    final FoodTaskData _taskData = context.watch<FoodTaskData>();
+    final FoodMasterData _masterData = context.watch<FoodMasterData>();
+    final FoodTaskEditModel _currentData = context.watch<FoodTaskEditModel>();
+    final formatter = NumberFormat("#,###");
 
     void _doAdd() {
       _taskData.addTask(_currentData.getEditingTask());
@@ -40,19 +42,20 @@ class TaskModal extends StatelessWidget {
           ],
         ),
       ]),
-      content: Container(
-        height: 400.0,
+      content: SizedBox(
+        height: 300.0,
         width: 360.0,
         child: Column(
           children: [
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Row(
                     children: [
                       DropdownButton(
-                        style: TextStyle(fontSize: 14.0, color: Colors.black),
+                        style: const TextStyle(
+                            fontSize: 14.0, color: Colors.black),
                         items: _masterData.getMasterList().map((master) {
                           return DropdownMenuItem<int>(
                             value: master.id,
@@ -66,121 +69,92 @@ class TaskModal extends StatelessWidget {
                   )
                 ])),
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('ウェイト(kg): '),
-                      Text('${(_currentData.getEditingTask().weight).toInt()}')
-                    ])),
-            _masterData.hasWeight(_currentData.getEditingTask().master)
-                ? Padding(
-                    padding: EdgeInsets.fromLTRB(24.0, 8.0, 64.0, 8.0),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      controller: _currentData.weightEditTextEditingController,
-                      onChanged: (value) =>
-                          _currentData.changeWeight(int.parse(value)),
-                    ))
-                : Padding(
-                    padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(children: [Text('-')])
-                        ])),
-            Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('セット数: '),
-                      Text('${(_currentData.getEditingTask().sets).toInt()}')
+                      const Text('ボリューム: '),
+                      Text('${_currentData.getEditingTask().volume.toInt()} %')
                     ])),
             Row(
               children: [
-                Container(
-                  width: 260.0,
+                SizedBox(
+                  width: 240.0,
                   child: Slider(
                     key: null,
-                    min: 0.0,
-                    max: 5.0,
-                    onChanged: _currentData.changeSets,
-                    value: _currentData.getEditingTask().sets.toDouble(),
+                    min: 0,
+                    max: 300,
+                    divisions: 50,
+                    onChanged: _currentData.changeVolume,
+                    value: _currentData.getEditingTask().volume.toDouble(),
                   ),
                 ),
               ],
             ),
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('回数: '),
-                      Text('${(_currentData.getEditingTask().rep).toInt()}')
-                    ])),
-            Row(
-              children: [
-                Container(
-                  width: 260.0,
-                  child: Slider(
-                    key: null,
-                    min: 0.0,
-                    max: 20.0,
-                    onChanged: _currentData.changeRep,
-                    value: _currentData.getEditingTask().rep.toDouble(),
-                  ),
-                ),
-              ],
-            ),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  const Icon(Icons.bolt, size: 16.0),
+                  Text(
+                      ' ${_masterData.getMasterItem(_currentData.getEditingTask().master).protein * _currentData.getEditingTask().volume / 100}'),
+                  const Icon(Icons.icecream, size: 16.0),
+                  Text(
+                      ' ${_masterData.getMasterItem(_currentData.getEditingTask().master).sugar * _currentData.getEditingTask().volume / 100}'),
+                  const Icon(Icons.egg, size: 16.0),
+                  Text(
+                      ' ${_masterData.getMasterItem(_currentData.getEditingTask().master).fat * _currentData.getEditingTask().volume / 100}'),
+                  const Icon(Icons.whatshot, size: 16.0),
+                  Text(
+                      ' ${formatter.format(_masterData.getMasterItem(_currentData.getEditingTask().master).calorie * _currentData.getEditingTask().volume / 100)}'),
+                ])),
           ],
         ),
       ),
       actions: target == 0
-          ? <Widget>[
+          ? [
               GestureDetector(
                 child: ElevatedButton(
                     onPressed: () {
                       _doAdd();
                       Navigator.pop(context);
                     },
-                    child: Text('追加'),
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
                       foregroundColor: Colors.white,
-                      fixedSize: Size(120, 40),
+                      fixedSize: const Size(120, 40),
                       alignment: Alignment.center,
-                    )),
+                    ),
+                    child: const Text('追加')),
               ),
               GestureDetector(
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('キャンセル'),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white70,
                         textStyle: const TextStyle(fontSize: 16),
                         foregroundColor: Colors.black45,
-                        fixedSize: Size(120, 40),
+                        fixedSize: const Size(120, 40),
                         alignment: Alignment.center,
-                      )))
+                      ),
+                      child: const Text('キャンセル')))
             ]
-          : <Widget>[
+          : [
               GestureDetector(
                 child: ElevatedButton(
                     onPressed: () {
                       _doUpdate();
                       Navigator.pop(context);
                     },
-                    child: Text("保存"),
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
                       foregroundColor: Colors.white,
-                      fixedSize: Size(120, 40),
+                      fixedSize: const Size(120, 40),
                       alignment: Alignment.center,
-                    )),
+                    ),
+                    child: const Text("保存")),
               ),
               GestureDetector(
                 child: ElevatedButton(
@@ -188,14 +162,14 @@ class TaskModal extends StatelessWidget {
                       _doRemove();
                       Navigator.pop(context);
                     },
-                    child: Text("削除"),
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.redAccent,
                       textStyle: const TextStyle(fontSize: 16),
                       foregroundColor: Colors.white,
-                      fixedSize: Size(120, 40),
+                      fixedSize: const Size(120, 40),
                       alignment: Alignment.center,
-                    )),
+                    ),
+                    child: const Text("削除")),
               ),
             ],
     );

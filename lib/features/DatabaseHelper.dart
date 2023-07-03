@@ -45,9 +45,17 @@ class DatabaseHelper {
     String path = await getDbPath();
     return openDatabase(path, onCreate: (db, version) async {
       await db.execute(
-          'CREATE TABLE master_table (id INTEGER PRIMARY KEY, name TEXT NOT NULL, part TEXT NOT NULL, type TEXT NOT NULL)');
+          'CREATE TABLE workout_master (id INTEGER PRIMARY KEY, name TEXT NOT NULL, part TEXT NOT NULL, type TEXT NOT NULL)');
       await db.execute(
-          'CREATE TABLE task_table (id INTEGER PRIMARY KEY, master INTEGER NOT NULL, date TEXT NOT NULL, weight INTEGER, rep INTEGER NOT NULL, sets INTEGER NOT NULL)');
+          'CREATE TABLE workout_task (id INTEGER PRIMARY KEY, master INTEGER NOT NULL, date TEXT NOT NULL, weight INTEGER, rep INTEGER NOT NULL, sets INTEGER NOT NULL)');
+      await db.execute(
+          'CREATE TABLE account_info (id INTEGER PRIMARY KEY, gender TEXT NOT NULL, age INTEGER NOT NULL, height INTEGER NOT NULL, weight INTEGER NOT NULL)');
+      await db.execute(
+          'CREATE TABLE weight_history (id INTEGER PRIMARY KEY, date TEXT NOT NULL, weight INTEGER NOT NULL, calorie INTEGER NOT NULL)');
+      await db.execute(
+          'CREATE TABLE food_master (id INTEGER PRIMARY KEY, name TEXT NOT NULL, type TEXT NOT NULL, protein INTEGER NOT NULL, sugar INTEGER NOT NULL, fat INTEGER NOT NULL, calorie INTEGER NOT NULL)');
+      await db.execute(
+          'CREATE TABLE food_task (id INTEGER PRIMARY KEY, master INTEGER NOT NULL, date TEXT NOT NULL, volume INTEGER NOT NULL)');
     }, version: 1);
   }
 

@@ -1,28 +1,27 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'DatabaseHelper.dart';
 import 'package:intl/intl.dart';
-import 'MasterData.dart';
 
-class TaskModel {
+class WorkoutTaskModel {
   int id;
   int master;
   String date;
   int weight;
   int sets;
   int rep;
-  TaskModel(this.id, this.master, this.date, this.weight, this.sets, this.rep);
+  WorkoutTaskModel(
+      this.id, this.master, this.date, this.weight, this.sets, this.rep);
 }
 
-class TaskData extends ChangeNotifier {
-  List<TaskModel> _tasks = [];
-  List<TaskModel> _all_tasks = [];
+class WorkoutTaskData extends ChangeNotifier {
+  List<WorkoutTaskModel> _tasks = [];
+  List<WorkoutTaskModel> _all_tasks = [];
   String current_date = DateFormat('yyyy-MM-dd').format(DateTime.now());
   final dbHelper = DatabaseHelper.instance;
 
-  TaskData() {
+  WorkoutTaskData() {
     fetchTaskData(current_date);
   }
 
@@ -34,18 +33,18 @@ class TaskData extends ChangeNotifier {
 
   setGetAllTask() async {
     final response = await _getDBData();
-    _all_tasks = (response as List<dynamic>)
-        .map((item) => TaskModel(item['id'], item['master'], item['date'],
-            item['weight'], item['sets'], item['rep']))
+    _all_tasks = response
+        .map((item) => WorkoutTaskModel(item['id'], item['master'],
+            item['date'], item['weight'], item['sets'], item['rep']))
         .toList();
     notifyListeners();
   }
 
-  List<TaskModel> getMaxData() {
+  List<WorkoutTaskModel> getMaxData() {
     Set<int> uniqueIdList = _all_tasks.map((item) => item.master).toSet();
-    List<TaskModel> sortedTasks = _all_tasks;
+    List<WorkoutTaskModel> sortedTasks = _all_tasks;
     sortedTasks.sort((a, b) => b.weight.compareTo(a.weight));
-    List<TaskModel> uniqueTaskList = uniqueIdList
+    List<WorkoutTaskModel> uniqueTaskList = uniqueIdList
         .map((item) =>
             _all_tasks.firstWhere((element) => element.master == item))
         .toList();
@@ -54,42 +53,42 @@ class TaskData extends ChangeNotifier {
 
   Future fetchTaskData(String date) async {
     final response = await _getDBTargetData(date);
-    _tasks = (response as List<dynamic>)
-        .map((item) => TaskModel(item['id'], item['master'], item['date'],
-            item['weight'], item['sets'], item['rep']))
+    _tasks = response
+        .map((item) => WorkoutTaskModel(item['id'], item['master'],
+            item['date'], item['weight'], item['sets'], item['rep']))
         .toList();
     notifyListeners();
   }
 
-  List<TaskModel> getTaskList() {
+  List<WorkoutTaskModel> getTaskList() {
     return _tasks;
   }
 
-  List<TaskModel> getAllTaskList() {
+  List<WorkoutTaskModel> getAllTaskList() {
     return _all_tasks;
   }
 
-  TaskModel getTaskItem(int target) {
+  WorkoutTaskModel getTaskItem(int target) {
     return _tasks.firstWhere((task) => task.id == target);
   }
 
   Future<List<Map<String, dynamic>>> _getDBTargetData(String date) async {
     final targetRows =
-        await dbHelper.queryTargetRows('task_table', 'date', date);
+        await dbHelper.queryTargetRows('workout_task', 'date', date);
     return targetRows;
   }
 
   Future<List<Map<String, dynamic>>> _getDBData() async {
-    final allRows = await dbHelper.queryAllRows('task_table');
+    final allRows = await dbHelper.queryAllRows('workout_task');
     return allRows;
   }
 
-  void updateTask(TaskModel data) async {
-    _tasks.firstWhere((master) => master.id == data.id).master = data.master;
-    _tasks.firstWhere((master) => master.id == data.id).date = data.date;
-    _tasks.firstWhere((master) => master.id == data.id).weight = data.weight;
-    _tasks.firstWhere((master) => master.id == data.id).sets = data.sets;
-    _tasks.firstWhere((master) => master.id == data.id).rep = data.rep;
+  void updateTask(WorkoutTaskModel data) async {
+    _tasks.firstWhere((item) => item.id == data.id).master = data.master;
+    _tasks.firstWhere((item) => item.id == data.id).date = data.date;
+    _tasks.firstWhere((item) => item.id == data.id).weight = data.weight;
+    _tasks.firstWhere((item) => item.id == data.id).sets = data.sets;
+    _tasks.firstWhere((item) => item.id == data.id).rep = data.rep;
 
     Map<String, dynamic> row = {
       'id': data.id,
@@ -99,11 +98,11 @@ class TaskData extends ChangeNotifier {
       'sets': data.sets,
       'rep': data.rep,
     };
-    await dbHelper.update(row, 'task_table');
+    await dbHelper.update(row, 'workout_task');
     notifyListeners();
   }
 
-  void addTask(TaskModel data) async {
+  void addTask(WorkoutTaskModel data) async {
     Map<String, dynamic> row = {
       'master': data.master,
       'date': data.date,
@@ -111,7 +110,7 @@ class TaskData extends ChangeNotifier {
       'sets': data.sets,
       'rep': data.rep,
     };
-    final id = await dbHelper.insert(row, 'task_table');
+    final id = await dbHelper.insert(row, 'workout_task');
     data.id = id;
     _tasks.add(data);
     notifyListeners();
@@ -119,12 +118,12 @@ class TaskData extends ChangeNotifier {
 
   void removeTask(int target) async {
     _tasks.remove(_tasks.firstWhere((master) => master.id == target));
-    await dbHelper.delete(target, 'task_table');
+    await dbHelper.delete(target, 'workout_task');
     notifyListeners();
   }
 }
 
-class TaskEditModel extends ChangeNotifier {
+class WorkoutTaskEditModel extends ChangeNotifier {
   int _id = 0;
   int _master = 0;
   String _date = '';
@@ -132,23 +131,22 @@ class TaskEditModel extends ChangeNotifier {
   int _sets = 0;
   int _rep = 0;
 
-  TaskModel getEditingTask() {
-    return TaskModel(_id, _master, _date, _weight, _sets, _rep);
+  WorkoutTaskModel getEditingTask() {
+    return WorkoutTaskModel(_id, _master, _date, _weight, _sets, _rep);
   }
 
-  setTaskEditModel(TaskModel data) {
+  setTaskEditModel(WorkoutTaskModel data) {
     _id = data.id;
     _master = data.master;
     _date = data.date;
     _weight = data.weight;
     _sets = data.sets;
     _rep = data.rep;
-    weightEditTextEditingController =
+    weightEditingController =
         TextEditingController(text: data.weight.toString());
   }
 
-  TextEditingController weightEditTextEditingController =
-      TextEditingController();
+  TextEditingController weightEditingController = TextEditingController();
 
   void changeMaster(int? value) {
     if (value != null) {
@@ -174,7 +172,7 @@ class TaskEditModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    weightEditTextEditingController.dispose();
+    weightEditingController.dispose();
     super.dispose();
   }
 }

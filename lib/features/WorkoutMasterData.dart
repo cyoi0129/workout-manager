@@ -1,39 +1,38 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'DatabaseHelper.dart';
 
-class MasterModel {
+class WorkoutMasterModel {
   int id;
   String name;
   String part;
   String type;
-  MasterModel(this.id, this.name, this.part, this.type);
+  WorkoutMasterModel(this.id, this.name, this.part, this.type);
 }
 
-class MasterData extends ChangeNotifier {
-  List<MasterModel> _masters = [];
+class WorkoutMasterData extends ChangeNotifier {
+  List<WorkoutMasterModel> _masters = [];
   final dbHelper = DatabaseHelper.instance;
 
-  MasterData() {
+  WorkoutMasterData() {
     fetchMasterData();
   }
 
   Future fetchMasterData() async {
     final response = await _getDBData();
-    _masters = (response as List<dynamic>)
-        .map((item) =>
-            MasterModel(item['id'], item['name'], item['part'], item['type']))
+    _masters = response
+        .map((item) => WorkoutMasterModel(
+            item['id'], item['name'], item['part'], item['type']))
         .toList();
     notifyListeners();
   }
 
-  List<MasterModel> getMasterList() {
+  List<WorkoutMasterModel> getMasterList() {
     return _masters;
   }
 
-  MasterModel getMasterItem(int target) {
+  WorkoutMasterModel getMasterItem(int target) {
     return _masters.firstWhere((master) => master.id == target);
   }
 
@@ -42,31 +41,31 @@ class MasterData extends ChangeNotifier {
   }
 
   Future<List<Map<String, dynamic>>> _getDBData() async {
-    final allRows = await dbHelper.queryAllRows('master_table');
+    final allRows = await dbHelper.queryAllRows('workout_master');
     return allRows;
   }
 
-  void updateMaster(MasterModel data) async {
-    _masters.firstWhere((master) => master.id == data.id).name = data.name;
-    _masters.firstWhere((master) => master.id == data.id).part = data.part;
-    _masters.firstWhere((master) => master.id == data.id).type = data.type;
+  void updateMaster(WorkoutMasterModel data) async {
+    _masters.firstWhere((item) => item.id == data.id).name = data.name;
+    _masters.firstWhere((item) => item.id == data.id).part = data.part;
+    _masters.firstWhere((item) => item.id == data.id).type = data.type;
     Map<String, dynamic> row = {
       'id': data.id,
       'name': data.name,
       'part': data.part,
       'type': data.type,
     };
-    await dbHelper.update(row, 'master_table');
+    await dbHelper.update(row, 'workout_master');
     notifyListeners();
   }
 
-  void addMaster(MasterModel data) async {
+  void addMaster(WorkoutMasterModel data) async {
     Map<String, dynamic> row = {
       'name': data.name,
       'part': data.part,
       'type': data.type,
     };
-    final id = await dbHelper.insert(row, 'master_table');
+    final id = await dbHelper.insert(row, 'workout_master');
     data.id = id;
     _masters.add(data);
     notifyListeners();
@@ -74,33 +73,31 @@ class MasterData extends ChangeNotifier {
 
   void removeMaster(int target) async {
     _masters.remove(_masters.firstWhere((master) => master.id == target));
-    // final id = await dbHelper.queryRowCount('master_table');
-    // final rowsDeleted = await dbHelper.delete(id!, 'master_table');
-    await dbHelper.delete(target, 'master_table');
-    await dbHelper.deleteRows(target, 'task_table', 'master');
+    await dbHelper.delete(target, 'workout_master');
+    await dbHelper.deleteRows(target, 'workout_task', 'master');
     notifyListeners();
   }
 }
 
-class MasterEditModel extends ChangeNotifier {
+class WorkoutMasterEditModel extends ChangeNotifier {
   int _id = 0;
   String _name = '';
   String _part = '';
   String _type = '';
 
-  MasterModel getEditingMaster() {
-    return MasterModel(_id, _name, _part, _type);
+  WorkoutMasterModel getEditingMaster() {
+    return WorkoutMasterModel(_id, _name, _part, _type);
   }
 
-  setMasterEditModel(MasterModel data) {
+  setMasterEditModel(WorkoutMasterModel data) {
     _id = data.id;
     _name = data.name;
     _part = data.part;
     _type = data.type;
-    nameEditTextEditingController = TextEditingController(text: data.name);
+    nameEditingController = TextEditingController(text: data.name);
   }
 
-  TextEditingController nameEditTextEditingController = TextEditingController();
+  TextEditingController nameEditingController = TextEditingController();
 
   void changeName(String? value) {
     if (value != null) {
@@ -125,7 +122,7 @@ class MasterEditModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    nameEditTextEditingController.dispose();
+    nameEditingController.dispose();
     super.dispose();
   }
 }

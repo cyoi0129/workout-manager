@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../features/MasterData.dart';
+import '../features/WorkoutMasterData.dart';
 
-class MasterModal extends StatelessWidget {
+class WorkoutMasterModal extends StatelessWidget {
   int target;
-  MasterModal({super.key, required this.target});
+  WorkoutMasterModal({super.key, required this.target});
 
   @override
   Widget build(BuildContext context) {
-    final MasterData _masterData = context.watch<MasterData>();
-    final MasterEditModel _currentData = context.watch<MasterEditModel>();
+    final WorkoutMasterData _masterData = context.watch<WorkoutMasterData>();
+    final WorkoutMasterEditModel _currentData =
+        context.watch<WorkoutMasterEditModel>();
     void _doAdd() {
       _masterData.addMaster(_currentData.getEditingMaster());
     }
@@ -36,59 +37,60 @@ class MasterModal extends StatelessWidget {
           ],
         ),
       ]),
-      content: Container(
+      content: SizedBox(
         height: 300.0,
         width: 360.0,
         child: Column(
           children: [
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
                 child: TextField(
-                  controller: _currentData.nameEditTextEditingController,
+                  controller: _currentData.nameEditingController,
                   onChanged: (text) {
                     _currentData.changeName(text);
                   },
                 )),
-            Padding(
+            const Padding(
                 padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [Text('部位')])),
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     DropdownButton(
-                      style: TextStyle(fontSize: 14.0, color: Colors.black),
-                      items: [
+                      style:
+                          const TextStyle(fontSize: 14.0, color: Colors.black),
+                      items: const [
                         DropdownMenuItem(
-                          child: Text('部位選択'),
                           value: '',
+                          child: Text('部位選択'),
                         ),
                         DropdownMenuItem(
-                          child: Text('胸筋'),
                           value: '胸筋',
+                          child: Text('胸筋'),
                         ),
                         DropdownMenuItem(
-                          child: Text('背筋'),
                           value: '背筋',
+                          child: Text('背筋'),
                         ),
                         DropdownMenuItem(
-                          child: Text('腹筋'),
                           value: '腹筋',
+                          child: Text('腹筋'),
                         ),
                         DropdownMenuItem(
-                          child: Text('腕'),
                           value: '腕',
+                          child: Text('腕'),
                         ),
                         DropdownMenuItem(
-                          child: Text('肩'),
                           value: '肩',
+                          child: Text('肩'),
                         ),
                         DropdownMenuItem(
-                          child: Text('脚'),
                           value: '脚',
+                          child: Text('脚'),
                         ),
                       ],
                       onChanged: (value) =>
@@ -97,34 +99,35 @@ class MasterModal extends StatelessWidget {
                     )
                   ],
                 )),
-            Padding(
+            const Padding(
                 padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [Text('種類')])),
             Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 8.0, 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     DropdownButton(
-                      style: TextStyle(fontSize: 14.0, color: Colors.black),
-                      items: [
+                      style:
+                          const TextStyle(fontSize: 14.0, color: Colors.black),
+                      items: const [
                         DropdownMenuItem(
-                          child: Text('種類選択'),
                           value: '',
+                          child: Text('種類選択'),
                         ),
                         DropdownMenuItem(
-                          child: Text('自重'),
                           value: '自重',
+                          child: Text('自重'),
                         ),
                         DropdownMenuItem(
-                          child: Text('フリーウェイト'),
                           value: 'フリーウェイト',
+                          child: Text('フリーウェイト'),
                         ),
                         DropdownMenuItem(
-                          child: Text('マシン'),
                           value: 'マシン',
+                          child: Text('マシン'),
                         ),
                       ],
                       onChanged: (value) =>
@@ -137,64 +140,67 @@ class MasterModal extends StatelessWidget {
         ),
       ),
       actions: target == 0
-          ? <Widget>[
+          ? [
               GestureDetector(
                 child: ElevatedButton(
-                    onPressed: () {
-                      _doAdd();
-                      Navigator.pop(context);
-                    },
-                    child: Text('追加'),
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 16),
-                      foregroundColor: Colors.white,
-                      fixedSize: Size(120, 40),
-                      alignment: Alignment.center,
-                    )),
+                  onPressed: () {
+                    _doAdd();
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 16),
+                    foregroundColor: Colors.white,
+                    fixedSize: const Size(120, 40),
+                    alignment: Alignment.center,
+                  ),
+                  child: const Text('追加'),
+                ),
               ),
               GestureDetector(
                   child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('キャンセル'),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.white70,
-                        textStyle: const TextStyle(fontSize: 16),
-                        foregroundColor: Colors.black45,
-                        fixedSize: Size(120, 40),
-                        alignment: Alignment.center,
-                      )))
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white70,
+                  textStyle: const TextStyle(fontSize: 16),
+                  foregroundColor: Colors.black45,
+                  fixedSize: const Size(120, 40),
+                  alignment: Alignment.center,
+                ),
+                child: const Text('キャンセル'),
+              ))
             ]
-          : <Widget>[
+          : [
               GestureDetector(
                 child: ElevatedButton(
                     onPressed: () {
                       _doUpdate();
                       Navigator.pop(context);
                     },
-                    child: Text('保存'),
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
                       foregroundColor: Colors.white,
-                      fixedSize: Size(120, 40),
+                      fixedSize: const Size(120, 40),
                       alignment: Alignment.center,
-                    )),
+                    ),
+                    child: const Text('保存')),
               ),
               GestureDetector(
                   child: ElevatedButton(
-                      onPressed: () {
-                        _doRemove();
-                        Navigator.pop(context);
-                      },
-                      child: Text('削除'),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        textStyle: const TextStyle(fontSize: 16),
-                        foregroundColor: Colors.white,
-                        fixedSize: Size(120, 40),
-                        alignment: Alignment.center,
-                      )))
+                onPressed: () {
+                  _doRemove();
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  textStyle: const TextStyle(fontSize: 16),
+                  foregroundColor: Colors.white,
+                  fixedSize: const Size(120, 40),
+                  alignment: Alignment.center,
+                ),
+                child: const Text('削除'),
+              ))
             ],
     );
   }

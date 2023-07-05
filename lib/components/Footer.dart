@@ -23,6 +23,11 @@ class _FooterState extends State<Footer> {
     ];
     setState(() {
       _selectedIndex = index;
+      // Navigator.pushNamed(
+      //   context,
+      //   tabs[index],
+      //   arguments: (index == 0 || index == 4) ? 'refresh' : '',
+      // );
       Navigator.of(context)
           .pushNamedAndRemoveUntil(tabs[index], (route) => false);
     });

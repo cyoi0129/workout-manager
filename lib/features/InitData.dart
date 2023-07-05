@@ -19,7 +19,7 @@ class InitData {
   InitData() {
     _initWorkoutMaster.forEach((item) => _addInitData(item, 'workout_master'));
     _initFoodMaster.forEach((item) => _addInitData(item, 'food_master'));
-    _initAccountData.forEach((item) => _addInitData(item, 'account_info'));
+    // _initAccountData.forEach((item) => _addInitData(item, 'account_info'));
     // _initWorkoutTask.forEach((item) => _addInitData(item, 'workout_task'));
     // _initFoodTask.forEach((item) => _addInitData(item, 'food_task'));
     // _initWeightData.forEach((item) => _addInitData(item, 'weight_history'));

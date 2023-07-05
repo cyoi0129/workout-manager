@@ -84,7 +84,7 @@ class FoodTaskModal extends StatelessWidget {
                     key: null,
                     min: 0,
                     max: 300,
-                    divisions: 50,
+                    divisions: 12,
                     onChanged: _currentData.changeVolume,
                     value: _currentData.getEditingTask().volume.toDouble(),
                   ),

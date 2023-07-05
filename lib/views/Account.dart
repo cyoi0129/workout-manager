@@ -1,19 +1,65 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import '../components/Footer.dart';
 import '../features/AccountData.dart';
 
-class AccountView extends StatelessWidget {
+class AccountView extends HookWidget {
   const AccountView({super.key});
   @override
   Widget build(BuildContext context) {
     final AccountData _accountData = context.watch<AccountData>();
     final AccountEditModel _currentData = context.watch<AccountEditModel>();
+    AccountModel _currentAccountData = _accountData.getAccountData();
+    final snackBar = SnackBar(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+      margin: const EdgeInsetsDirectional.all(16),
+      content: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(
+              Icons.check,
+              color: Colors.teal,
+            ),
+            Text(
+              '保存しました',
+              style: TextStyle(color: Colors.teal),
+            ),
+          ],
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      behavior: SnackBarBehavior.floating,
+      showCloseIcon: true,
+      elevation: 4.0,
+      backgroundColor: Colors.white,
+      clipBehavior: Clip.hardEdge,
+      dismissDirection: DismissDirection.horizontal,
+    );
+
+    void _updateAccountData() {
+      _currentData.setAccountEditModel(_currentAccountData);
+    }
+
+    useEffect(() {
+      _updateAccountData();
+    }, [_currentAccountData]);
+
     final formatter = NumberFormat("#,###");
     void _doUpdate() {
+      print(_currentData.getEditingAccount().gender);
       _accountData.updateAccount(_currentData.getEditingAccount());
+    }
+
+    void _showSnack() {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     return Scaffold(
@@ -25,7 +71,7 @@ class AccountView extends StatelessWidget {
             child:
                 Image.asset('assets/images/header.png', fit: BoxFit.contain)),
         title: const Text('まっちょノート'),
-        actions: <Widget>[
+        actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context)
@@ -35,7 +81,9 @@ class AccountView extends StatelessWidget {
           )
         ],
       ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      body: SingleChildScrollView(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         const Padding(
             padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 16.0),
             child: Text('ユーザー情報',
@@ -155,6 +203,7 @@ class AccountView extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     _doUpdate();
+                    Timer(const Duration(seconds: 1), () => _showSnack());
                   },
                   style: TextButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 16),
@@ -164,7 +213,7 @@ class AccountView extends StatelessWidget {
                   ),
                   child: const Text("保存")),
             ]))
-      ]),
+      ])),
       bottomNavigationBar: const Footer(current: 4),
     );
   }

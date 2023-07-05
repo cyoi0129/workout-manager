@@ -41,6 +41,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => HistoryData()),
         ChangeNotifierProvider(create: (context) => HistoryEditModel()),
         ChangeNotifierProvider(create: (context) => SummaryData()),
+        ChangeNotifierProvider(create: (context) => CurrentChartData()),
       ],
       child: const MyApp(),
     ),
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'NotoSansJP',
         ),
         routes: {
-          '/': (context) => const AccountView(),
+          '/': (context) => const HistoryView(),
           '/summary': (context) => const SummaryView(),
           '/history': (context) => const HistoryView(),
           '/task': (context) => const TaskView(),

@@ -26,7 +26,7 @@ class _HeaderState extends State<Header> {
           height: 31.5,
           child: Image.asset('assets/images/header.png', fit: BoxFit.contain)),
       title: const Text('まっちょノート'),
-      actions: <Widget>[
+      actions: [
         IconButton(
           onPressed: () {
             Navigator.of(context)

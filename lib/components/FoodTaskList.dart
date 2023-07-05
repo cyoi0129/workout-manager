@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'dart:async';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_manager/components/WeightModal.dart';
 import '../features/FoodMasterData.dart';
@@ -7,7 +10,7 @@ import '../features/FoodTaskData.dart';
 import '../features/HistoryData.dart';
 import 'FoodTaskModal.dart';
 
-class FoodTaskList extends StatelessWidget {
+class FoodTaskList extends HookWidget {
   const FoodTaskList({super.key});
 
   @override
@@ -18,6 +21,36 @@ class FoodTaskList extends StatelessWidget {
     final HistoryData _historyData = context.watch<HistoryData>();
     final HistoryEditModel _currentData = context.watch<HistoryEditModel>();
     final formatter = NumberFormat("#,###");
+    HistoryModel _currentHistoryData = _historyData.getHistoryData();
+
+    final snackBar = SnackBar(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+      margin: const EdgeInsetsDirectional.all(16),
+      content: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(
+              Icons.check,
+              color: Colors.teal,
+            ),
+            Text(
+              '保存しました',
+              style: TextStyle(color: Colors.teal),
+            ),
+          ],
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      behavior: SnackBarBehavior.floating,
+      showCloseIcon: true,
+      elevation: 4.0,
+      backgroundColor: Colors.white,
+      clipBehavior: Clip.hardEdge,
+      dismissDirection: DismissDirection.horizontal,
+    );
 
     void _setCurrentData() {
       _currentData.setHistoryEditModel(HistoryModel(
@@ -41,17 +74,25 @@ class FoodTaskList extends StatelessWidget {
       }
     }
 
+    useEffect(() {
+      _currentData.setHistoryEditModel(_currentHistoryData);
+    }, [_currentHistoryData]);
+
     void _doUpdate() {
       HistoryModel _tempData = HistoryModel(
           _historyData.getHistoryData().id,
           _historyData.getHistoryData().date,
-          _historyData.getHistoryData().weight,
+          _currentData.getEditingHistory().weight,
           _taskData.getTotalCalorie(_masterData));
       if (_historyData.getHistoryData().id == 0) {
         _historyData.addHistory(_tempData);
       } else {
         _historyData.updateHistory(_tempData);
       }
+    }
+
+    void _showSnack() {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     return Scaffold(
@@ -73,21 +114,38 @@ class FoodTaskList extends StatelessWidget {
                   ),
                   SizedBox(
                     child: Row(children: [
-                      Text('体重: ${_historyData.getHistoryData().weight} kg '),
-                      IconButton(
-                        icon: const Icon(Icons.edit, size: 20.0),
-                        onPressed: () {
-                          showDialog<void>(
-                              context: context,
-                              builder: (_) {
-                                _setCurrentData();
-                                return WeightModal(
-                                    target: _historyData.getHistoryData().id);
-                              });
-                        },
-                      ),
+                      const Text('体重 '),
+                      SizedBox(
+                          width: 60,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: _currentData.weightEditingController,
+                            onChanged: (value) =>
+                                _currentData.changeWeight(int.parse(value)),
+                          ))
                     ]),
                   ),
+                  // SizedBox(
+                  //   child: Row(children: [
+                  //     Text('体重: ${_historyData.getHistoryData().weight} kg '),
+                  //     IconButton(
+                  //       icon: const Icon(Icons.edit, size: 20.0),
+                  //       onPressed: () {
+                  //         showDialog<void>(
+                  //             context: context,
+                  //             builder: (_) {
+                  //               _setCurrentData();
+                  //               return WeightModal(
+                  //                   target: _historyData.getHistoryData().id);
+                  //             });
+                  //       },
+                  //     ),
+                  //   ]),
+                  // ),
                 ])),
         const Padding(
             padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
@@ -179,7 +237,11 @@ class FoodTaskList extends StatelessWidget {
             ]))
       ]),
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.save), onPressed: () => {_doUpdate()}),
+          child: const Icon(Icons.save),
+          onPressed: () {
+            _doUpdate();
+            Timer(const Duration(seconds: 1), () => _showSnack());
+          }),
     );
   }
 }

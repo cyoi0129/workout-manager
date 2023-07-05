@@ -139,7 +139,7 @@ class WorkoutTaskModal extends StatelessWidget {
         ),
       ),
       actions: target == 0
-          ? <Widget>[
+          ? [
               GestureDetector(
                 child: ElevatedButton(
                     onPressed: () {
@@ -168,7 +168,7 @@ class WorkoutTaskModal extends StatelessWidget {
                       ),
                       child: const Text('キャンセル')))
             ]
-          : <Widget>[
+          : [
               GestureDetector(
                 child: ElevatedButton(
                     onPressed: () {

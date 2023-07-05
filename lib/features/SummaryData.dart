@@ -59,6 +59,12 @@ class SummaryData extends ChangeNotifier {
     _createChartData();
   }
 
+  // Init method
+  void initData() {
+    _createListData();
+    _createChartData();
+  }
+
   // Reset method
   void changeDate(String target, DateTime date) {
     if (target == 'start') {
@@ -206,5 +212,19 @@ class SummaryData extends ChangeNotifier {
   Future<List<Map<String, dynamic>>> _getDBTargetFoodMasterData() async {
     final allRows = await dbHelper.queryAllRows('food_master');
     return allRows;
+  }
+}
+
+class CurrentChartData extends ChangeNotifier {
+  SummaryModel _summaryData = SummaryModel(
+      DateTime.now().subtract(const Duration(days: 8)),
+      DateTime.now().subtract(const Duration(days: 1)), [], [], [], [], []);
+
+  SummaryModel getCurrentChartData() {
+    return _summaryData;
+  }
+
+  setCurrentChartData(SummaryModel data) {
+    _summaryData = data;
   }
 }

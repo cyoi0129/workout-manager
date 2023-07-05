@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import '../components/Footer.dart';
 import '../features/SummaryData.dart';
 
-class SummaryView extends StatelessWidget {
+class SummaryView extends HookWidget {
   const SummaryView({super.key});
   @override
   Widget build(BuildContext context) {
     final SummaryData _summaryData = context.watch<SummaryData>();
+    final CurrentChartData _currentData = context.watch<CurrentChartData>();
+    SummaryModel _currentSummaryData = _summaryData.getSummary();
+
+    void updateChart() {
+      _currentData.setCurrentChartData(_currentSummaryData);
+    }
+
+    useEffect(() {
+      updateChart();
+    }, [_currentSummaryData]);
 
     void _changeStartDate() async {
       final DateTime? picked = await showDatePicker(
@@ -20,6 +31,7 @@ class SummaryView extends StatelessWidget {
           lastDate: DateTime.now().add(const Duration(days: 360)));
       if (picked != null) {
         _summaryData.changeDate('start', picked);
+        updateChart();
       }
     }
 
@@ -32,6 +44,7 @@ class SummaryView extends StatelessWidget {
           lastDate: DateTime.now().add(const Duration(days: 360)));
       if (picked != null) {
         _summaryData.changeDate('end', picked);
+        updateChart();
       }
     }
 
@@ -97,15 +110,17 @@ class SummaryView extends StatelessWidget {
                           LineSeries<ChartData, String>(
                               name: '体重',
                               color: Colors.lightBlueAccent,
-                              dataSource:
-                                  _summaryData.getSummary().weightChartLine,
+                              dataSource: _currentData
+                                  .getCurrentChartData()
+                                  .weightChartLine,
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               dataLabelSettings:
                                   const DataLabelSettings(isVisible: true)),
                           ColumnSeries<ChartData, String>(
-                            dataSource:
-                                _summaryData.getSummary().calorieChartLine,
+                            dataSource: _currentData
+                                .getCurrentChartData()
+                                .calorieChartLine,
                             xValueMapper: (ChartData data, _) => data.x,
                             yValueMapper: (ChartData data, _) => data.y,
                             name: 'カロリー',
@@ -129,8 +144,9 @@ class SummaryView extends StatelessWidget {
                         tooltipBehavior: TooltipBehavior(enable: true),
                         series: <ChartSeries<ChartData, String>>[
                           ColumnSeries<ChartData, String>(
-                            dataSource:
-                                _summaryData.getSummary().proteinChartLine,
+                            dataSource: _currentData
+                                .getCurrentChartData()
+                                .proteinChartLine,
                             xValueMapper: (ChartData data, _) => data.x,
                             yValueMapper: (ChartData data, _) => data.y,
                             name: 'タンパク質',
@@ -142,8 +158,9 @@ class SummaryView extends StatelessWidget {
                                 const DataLabelSettings(isVisible: true),
                           ),
                           ColumnSeries<ChartData, String>(
-                            dataSource:
-                                _summaryData.getSummary().sugarChartLine,
+                            dataSource: _currentData
+                                .getCurrentChartData()
+                                .sugarChartLine,
                             xValueMapper: (ChartData data, _) => data.x,
                             yValueMapper: (ChartData data, _) => data.y,
                             name: '糖質',
@@ -155,8 +172,9 @@ class SummaryView extends StatelessWidget {
                                 const DataLabelSettings(isVisible: true),
                           ),
                           ColumnSeries<ChartData, String>(
-                            dataSource:
-                                _summaryData.getSummary().sugarChartLine,
+                            dataSource: _currentData
+                                .getCurrentChartData()
+                                .sugarChartLine,
                             xValueMapper: (ChartData data, _) => data.x,
                             yValueMapper: (ChartData data, _) => data.y,
                             name: '脂質',

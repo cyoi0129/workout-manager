@@ -147,7 +147,8 @@ class WorkoutTaskModal extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 16),
+                      backgroundColor: Colors.teal,
+                      textStyle: const TextStyle(fontSize: 14),
                       foregroundColor: Colors.white,
                       fixedSize: const Size(120, 40),
                       alignment: Alignment.center,
@@ -161,7 +162,7 @@ class WorkoutTaskModal extends StatelessWidget {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white70,
-                        textStyle: const TextStyle(fontSize: 16),
+                        textStyle: const TextStyle(fontSize: 14),
                         foregroundColor: Colors.black45,
                         fixedSize: const Size(120, 40),
                         alignment: Alignment.center,
@@ -176,6 +177,7 @@ class WorkoutTaskModal extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
+                      backgroundColor: Colors.teal,
                       textStyle: const TextStyle(fontSize: 16),
                       foregroundColor: Colors.white,
                       fixedSize: const Size(120, 40),

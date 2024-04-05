@@ -74,6 +74,7 @@ class WeightModal extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: TextButton.styleFrom(
+                backgroundColor: Colors.teal,
                 textStyle: const TextStyle(fontSize: 16),
                 foregroundColor: Colors.white,
                 fixedSize: const Size(120, 40),
